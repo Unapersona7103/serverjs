@@ -1,8 +1,0 @@
-services:
-  - type: web
-    name: mi-server
-    env: node
-    plan: free
-    branch: main
-    buildCommand: ""
-    startCommand: "npm start"
