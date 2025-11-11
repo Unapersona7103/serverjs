@@ -15,7 +15,7 @@ app.post('/datos', (req, res) => {
     res.json({ mensaje: '✅ Dato recibido y almacenado' });
 });
 
-// Ruta para ver datos (con interfaz mejorada)
+// Ruta para ver datos (con interfaz mejorada y colapsables)
 app.get('/ver-datos', (req, res) => {
     // Función para formatear texto
     function formatLabel(text) {
@@ -70,7 +70,7 @@ app.get('/ver-datos', (req, res) => {
             background-color: white;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            padding: 20px;
+            padding: 0;
             margin-bottom: 20px;
             transition: transform 0.2s;
         }
@@ -81,13 +81,24 @@ app.get('/ver-datos', (req, res) => {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #eee;
+            padding: 15px 20px;
+            cursor: pointer;
+            background-color: #f8f9fa;
+            border-radius: 10px 10px 0 0;
+        }
+        .entry-header:hover {
+            background-color: #e9ecef;
         }
         .entry-date {
             font-size: 0.9rem;
             color: #7f8c8d;
+        }
+        .entry-content {
+            padding: 20px;
+            display: none;
+        }
+        .entry-content.expanded {
+            display: block;
         }
         .section {
             margin-bottom: 15px;
@@ -147,10 +158,11 @@ app.get('/ver-datos', (req, res) => {
             const timestamp = dato.timestamp ? new Date(dato.timestamp).toLocaleString() : 'Desconocido';
             html += `
             <div class="entry">
-                <div class="entry-header">
+                <div class="entry-header" onclick="toggleEntry(${index})">
                     <strong>Entrada #${index + 1}</strong>
                     <span class="entry-date">${timestamp}</span>
                 </div>
+                <div class="entry-content" id="entry-${index}">
             `;
 
             // Iterar por cada categoría (ej: basicInfo, geoInfo, etc.)
@@ -184,7 +196,7 @@ app.get('/ver-datos', (req, res) => {
                 `;
             }
 
-            html += `</div>`; // Cierre de .entry
+            html += `</div></div>`; // Cierre de .entry-content y .entry
         });
     }
 
@@ -193,6 +205,17 @@ app.get('/ver-datos', (req, res) => {
             🔍 Visualizador de datos | Proyecto personal de experimentación
         </footer>
     </div>
+
+    <script>
+        function toggleEntry(index) {
+            const content = document.getElementById('entry-' + index);
+            if (content.classList.contains('expanded')) {
+                content.classList.remove('expanded');
+            } else {
+                content.classList.add('expanded');
+            }
+        }
+    </script>
 </body>
 </html>
 `;
