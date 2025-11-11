@@ -17,7 +17,14 @@ app.post('/datos', (req, res) => {
 app.get('/ver-datos', (req, res) => {
     let html = '<h1>📄 Datos Recibidos</h1><ul>';
     datosRecibidos.forEach((dato, index) => {
-        html += `<li><pre>${JSON.stringify(dato, null, 2)}</pre></li>`;
+        html += '<li><details><summary>Datos</summary><pre>' + JSON.stringify(dato, null, 2) + '</pre>';
+
+        // Si hay una imagen en base64, mostrarla
+        if (dato.photo) {
+            html += `<p><strong>Foto capturada:</strong></p><img src="${dato.photo}" alt="Foto capturada" style="max-width:300px; max-height:300px;"/><br>`;
+        }
+
+        html += '</details></li>';
     });
     html += '</ul>';
     res.send(html);
